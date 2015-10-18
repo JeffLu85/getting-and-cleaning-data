@@ -1,4 +1,4 @@
-# 1. Merge the training and the test sets to create one data set.
+# 1) Merges the training and the test sets to create one data set.
 
 # Read data files
 features <- read.table('./features.txt',header=FALSE)
@@ -32,20 +32,20 @@ testData <- cbind(yTest,subjectTest,xTest)
 # Create merged data set
 finalData <- rbind(trainingData,testData)
 
-# 2. Extract only the measurements on the mean and standard deviation for each measurement. 
+# 2) Extracts only the measurements on the mean and standard deviation for each measurement.
 
 # Subset data table with only desired columns
 colNames <- colnames(finalData)
 logicalVector <- (grepl("activity..",colNames) | grepl("subject..",colNames) | grepl("-mean..",colNames) & !grepl("-meanFreq..",colNames) & !grepl("mean..-",colNames) | grepl("-std..",colNames) & !grepl("-std()..-",colNames))
 finalData <- finalData[logicalVector==TRUE]
 
-# 3. Use descriptive activity names to name the activities in the data set
+# 3) Uses descriptive activity names to name the activities in the data set
 
 # Merge finalData with acitivityType
 finalData <- merge(finalData,activityType,by='activityId',all.x=TRUE)
 colNames <- colnames(finalData)
 
-# 4. Appropriately label the data set with descriptive activity names. 
+# 4) Appropriately labels the data set with descriptive variable names.
 
 # Clean up the variable names
 for (i in 1:length(colNames)) {
@@ -66,7 +66,7 @@ for (i in 1:length(colNames)) {
 # new column names
 colnames(finalData) <- colNames
 
-# 5. Create a second, independent tidy data set with the average of each variable for each activity and each subject. 
+# 5) Creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 
 finalDataNoActivityType <- finalData[,names(finalData) != 'activityType']
 tidyData <- aggregate(finalDataNoActivityType[,names(finalDataNoActivityType) != c('activityId','subjectId')],by=list(activityId=finalDataNoActivityType$activityId,subjectId = finalDataNoActivityType$subjectId),mean)
